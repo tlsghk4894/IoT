@@ -1,0 +1,33 @@
+import java.io.*;
+import java.net.*;
+public class TCPServer {
+	public static void main(String [] args) throws IOException{
+		int port = 10010;
+		ServerSocket serverSocket = new ServerSocket(port);
+		System.out.println("Server is listening on port " + port);
+		
+		int cnt=0;
+		while(true) {
+			Socket connectionSocket = serverSocket.accept();
+			cnt++;
+			System.out.println("Client " + cnt + " connected.");
+			BufferedReader reader = new BufferedReader(
+					new InputStreamReader(connectionSocket.getInputStream()));
+			PrintWriter writer = new PrintWriter(
+					new OutputStreamWriter(connectionSocket.getOutputStream()));
+			
+			String recvMsg = reader.readLine();
+			System.out.println("From Client " + cnt + " : " + recvMsg);
+			
+			String sendMsg = "Hello Client.";
+			System.out.println("To Client " + cnt + " : " + sendMsg);
+			writer.println(sendMsg);
+			writer.flush();
+			
+			recvMsg = reader.readLine();
+			
+			connectionSocket.close();
+			System.out.println("Client " + cnt + " disconnected.");
+		}
+	}
+}
